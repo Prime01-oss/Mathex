@@ -1,23 +1,34 @@
 import '@misc/window/windowPreload';
-import { contextBridge, ipcRenderer } from 'electron';
 
-contextBridge.exposeInMainWorld('api', {
-  /**
-   * Here you can expose functions to the renderer process
-   * so they can interact with the main process.
-   */
+// Say something
+console.log('[ERWT] : Preload execution started');
 
-  // NEW: Functions for custom shortcuts
-  getCustomShortcuts: () => ipcRenderer.invoke('get-custom-shortcuts'),
-  setCustomShortcuts: (shortcuts: Record<string, string>) => ipcRenderer.invoke('set-custom-shortcuts', shortcuts),
+// Get versions
+window.addEventListener('DOMContentLoaded', () => {
+  const { env } = process;
+  const versions: Record<string, unknown> = {};
 
-  // Existing functions from the project
-  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  // ERWT Package version
+  versions['erwt'] = env['npm_package_version'];
+  versions['license'] = env['npm_package_license'];
 
-  // File system
-  openFileDialog: () => ipcRenderer.invoke('open-file-dialog'),
-  saveFile: (file: { content: string; filePath: string }) => ipcRenderer.invoke('save-file', file),
-  openFile: (filePath: string) => ipcRenderer.invoke('open-file', filePath),
-  readFolder: (folderPath: string) => ipcRenderer.invoke('read-folder', folderPath),
+  // Process versions
+  for (const type of ['chrome', 'node', 'electron']) {
+    versions[type] = process.versions[type].replace('+', '');
+  }
+
+  // NPM deps versions
+  for (const type of ['react']) {
+    const v = env['npm_package_dependencies_' + type];
+    if (v) versions[type] = v.replace('^', '');
+  }
+
+  // NPM @dev deps versions
+  for (const type of ['webpack', 'typescript']) {
+    const v = env['npm_package_devDependencies_' + type];
+    if (v) versions[type] = v.replace('^', '');
+  }
+
+  // Set versions to app data
+  // app.setAttribute('data-versions', JSON.stringify(versions));
 });
-

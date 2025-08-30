@@ -8,7 +8,7 @@ module.exports = {
     // Create asar archive for main, renderer process files
     asar: true,
     // Set executable name
-    executableName: 'Mathbuddy',
+    executableName: 'mathex',
   
     // Set application icon
     icon: path.resolve('assets/images/appIcon.ico'),
@@ -20,7 +20,7 @@ module.exports = {
       // Windows applications and is therefore the most user friendly you can get.
       name: '@electron-forge/maker-squirrel',
       config: {
-        name: 'mathbuddy',
+        name: 'mathex',
       },
     },
     {

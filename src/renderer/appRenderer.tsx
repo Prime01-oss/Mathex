@@ -1,3 +1,4 @@
+import 'katex/dist/katex.min.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import WindowFrame from '@misc/window/components/WindowFrame';
@@ -8,7 +9,7 @@ console.log('[ERWT] : Renderer execution started');
 
 // Application to Render
 const app = (
-  <WindowFrame title='MathBuddy' platform='windows'>
+  <WindowFrame title='mathex' platform='windows'>
     <Application />
     <div id="portal"></div>
   </WindowFrame>

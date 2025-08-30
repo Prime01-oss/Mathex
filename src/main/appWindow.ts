@@ -77,7 +77,7 @@ ipcMain.on('getOS', () => {
 });
 
 ipcMain.on('saveX', (event, data, filePath) => {
-  const filesPath = path.join(app.getPath('documents'), 'Mathbuddy', 'files');
+  const filesPath = path.join(app.getPath('documents'), 'mathex', 'files');
 
   if (fs.existsSync(filesPath)) {
     fs.writeFileSync(path.join(filePath), data, 'utf-8');
@@ -102,7 +102,7 @@ ipcMain.on('loadX', (event, filePath) => {
 
 ipcMain.on('openFiles', () => {
   shell
-    .openPath(path.join(app.getPath('documents'), 'Mathbuddy', 'files'))
+    .openPath(path.join(app.getPath('documents'), 'mathex', 'files'))
     .catch((error) => {
       console.error(error);
     });
@@ -172,11 +172,11 @@ function buildTree(dir: string, root: any) {
 }
 
 ipcMain.on('getNotebooks', () => {
-  const filesPath = path.join(app.getPath('documents'), 'Mathbuddy', 'files');
+  const filesPath = path.join(app.getPath('documents'), 'mathex', 'files');
 
   if (!fs.existsSync(filesPath)) {
     fs.mkdirSync(filesPath, {recursive: true});
-    fs.writeFileSync(path.join(filesPath, "Welcome to Mathbuddy!.json"), JSON.stringify(onboardingContent))
+    fs.writeFileSync(path.join(filesPath, "Welcome to mathex!.json"), JSON.stringify(onboardingContent))
   }
 
   const root = {};

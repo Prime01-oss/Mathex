@@ -1,28 +1,38 @@
+import { useGeneralContext } from '@components/GeneralContext';
 import React from 'react';
-import { TrashIcon } from '../Icons';
-import './Header.scss';
 
-export interface TagProps {
-    text: string;
-    color: string;
-    // This is the new line that tells the component to expect the onRemoveTag function
-    onRemoveTag?: (tag: string) => void;
-}
+export type TagProps = {
+  text: string;
+  color: string;
+};
 
-export const Tag = ({ text, color, onRemoveTag }: TagProps) => {
+export const Tag = ({ text, color }: TagProps) => {
+  const { setCurrentFileTags, currentFileTags } = useGeneralContext();
 
-    const handleRemove = () => {
-        if (onRemoveTag) {
-            onRemoveTag(text);
-        }
-    }
+  const handleRemoveTag = () => {
+    setCurrentFileTags(currentFileTags.filter((tag: string) => tag != text));
 
-    return (
-        <div className={`tag ${color}`}>
-            <span>{text}</span>
-            <button onClick={handleRemove}>
-                <TrashIcon />
-            </button>
-        </div>
-    )
-}
+    //TODO: figure out how to check if tag is not in all of the files
+    
+    // localStorage.setItem(
+    //   'all-tags',
+    //   JSON.stringify(
+    //     JSON.parse(localStorage.getItem('all-tags')).filter(
+    //       (tag: TagProps) => tag.text != text,
+    //     ),
+    //   ),
+    // );
+  };
+
+  return (
+    <div
+      className='tag-pill'
+      style={{
+        backgroundColor: `hsl(${color}, var(--tag-saturation), var(--tag-lightness))`,
+      }}
+    >
+      <span className='tag-action' onClick={handleRemoveTag}></span>
+      <div className='tag-content'>{text}</div>
+    </div>
+  );
+};

@@ -1,54 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import '../Application.scss';
+import { icons } from '../Icons';
 import FilePath from './FilePath';
 import { Tag, TagProps } from './Tag';
 import AddTag from './AddTag';
-import { useGeneralContext } from '../GeneralContext';
-import './Header.scss';
+import WindowControls from '@misc/window/components/WindowControls';
+import { useGeneralContext } from '@components/GeneralContext';
 
 const Header = () => {
-  const { page, updatePage } = useGeneralContext();
-  // The 'TagProps' type from your project seems to use 'text' not 'name', based on the errors.
-  const [tags, setTags] = useState<TagProps[]>([]);
+  const allTags = JSON.parse(localStorage.getItem('all-tags'));
+  const { selectedFile, currentFileTags, setCurrentFileTags, currentOS } = useGeneralContext();
+  const [currentFilePath, setCurrentFilePath] = useState('');
 
   useEffect(() => {
-    if (!page?.tags) {
-      setTags([]);
-      return;
-    }
-    // Fix: Using 'text' instead of 'name' and adding a type for the 'tag' parameter.
-    setTags(page.tags.map((tag: string) => ({ text: tag, color: 'blue' })));
-  }, [page]);
-
-  // Fix: Adding the 'string' type to the 'tag' parameter.
-  const onAddTag = (tag: string) => {
-    if (!page) return;
-
-    const newTags = [...(page.tags || []), tag];
-    updatePage({ ...page, tags: newTags });
-  };
-
-  // Fix: Adding the 'string' type to the 'tag' parameter.
-  const onRemoveTag = (tag: string) => {
-    if (!page) return;
-
-    // Fix: Adding the 'string' type to the 't' parameter in the filter function.
-    const newTags = page.tags.filter((t: string) => t !== tag);
-    updatePage({ ...page, tags: newTags });
-  };
+    setCurrentFilePath(selectedFile);
+    setCurrentFileTags([])
+  }, [selectedFile]);
 
   return (
     <div className='header'>
-        {/* Fix: The FilePath component requires the 'filePath' prop. */}
-        <FilePath filePath={page?.filePath || ''} />
-        <div className='tags'>
-            {/* Fix: Using 'tag.text' for the key and passing props explicitly to avoid type errors. */}
-            {tags.map((tag) => <Tag key={tag.text} text={tag.text} color={tag.color} onRemoveTag={onRemoveTag} />)}
-            <AddTag onAddTag={onAddTag} />
-        </div>
+      <div className='main-heading'>
+        <section className='header-content'>
+          <div className='logo'>
+            <img src={icons.logo} id='logo' alt='mathex' />
+          </div>
+          <FilePath filePath={currentFilePath} />
+          <div className='tags'>
+            {currentFileTags
+              ? currentFileTags.map((tag: string) => {
+                  const foundTag = allTags.find(
+                    (searchTag: TagProps) => searchTag.text == tag,
+                  );
+                  return (
+                    <Tag
+                      key={`tag-${foundTag.text}`}
+                      text={foundTag.text}
+                      color={foundTag.color}
+                    />
+                  );
+                })
+              : null}
+            {currentFilePath ? <AddTag /> : <></>}
+          </div>
+        </section>
+        <section className='header-draggable'></section>
+        <section className='header-controls'>
+          <WindowControls platform={currentOS}></WindowControls>
+        </section>
+      </div>
     </div>
   );
 };
 
 export default Header;
-

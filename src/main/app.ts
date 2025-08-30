@@ -1,20 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { createAppWindow } from './appWindow';
-import Store from 'electron-store';
-
-// Create a store for user settings
-const store = new Store();
-
-// IPC handler to get custom shortcuts from the store
-ipcMain.handle('get-custom-shortcuts', () => {
-  return store.get('customShortcuts', {});
-});
-
-// IPC handler to set custom shortcuts in the store
-ipcMain.handle('set-custom-shortcuts', (event, shortcuts) => {
-  store.set('customShortcuts', shortcuts);
-});
-
 
 /** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
 if (require('electron-squirrel-startup')) {

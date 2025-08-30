@@ -1,6 +1,6 @@
 {
-  "name": "mathbuddy",
-  "productName": "MathBuddy",
+  "name": "mathex",
+  "productName": "mathEx",
   "version": "1.0.0",
   "description": "Digital Mathematics Notebook",
   "main": ".webpack/main",
@@ -40,7 +40,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yonatanmgr/mathbuddy"
+    "url": "https://github.com/yonatanmgr/mathex"
   },
   "license": "MIT",
   "config": {
@@ -89,7 +89,8 @@
     "@flaticon/flaticon-uicons": "^2.0.1",
     "@tldraw/tldraw": "^1.28.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.2.0",
+    "electron-store": "^8.1.0",
+    "fuse.js": "^7.1.0",
     "gridstack": "^7.2.3",
     "i18next": "^22.4.11",
     "kbar": "^0.1.0-beta.40",

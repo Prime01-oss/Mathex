@@ -1,3 +1,4 @@
+
 export type TitlebarMenuItem = {
   name: string;
   action?: string;
@@ -124,6 +125,17 @@ const titlebarMenus: TitlebarMenu[] = [
         name: 'Close',
         action: 'exit',
         shortcut: 'Ctrl+W',
+      },
+    ],
+  },
+  {
+    name: 'Author',
+    items: [
+      {
+        name: 'Guasam',
+        action: 'open_url',
+        value: 'https://github.com/guasam',
+        shortcut: '@guasam',
       },
     ],
   },
