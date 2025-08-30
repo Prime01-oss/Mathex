@@ -42,6 +42,12 @@ const FilesSidebar = () => {
             icon='terminal'
             onClick={() => query.toggle()}
           />
+          <SidebarButton
+            title={t('Shortcuts')}
+            buttonType='menu'
+            icon='Settings'
+            onClick={handleOnClickMathPanel}
+          />
         </section>
         <section id='bottom'>
           <SidebarButton
