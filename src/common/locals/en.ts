@@ -2,6 +2,7 @@ export const EN_TRANSLATION = {
   'My Notebooks': 'Notebooks',
   'Command Bar': 'Command Bar',
   'Math Panel': 'Math Panel',
+  'Shortcuts': 'Shortcuts',
   Archive: 'Archive',
   'New Folder': 'New Folder',
   'New File': 'New File',
@@ -15,14 +16,12 @@ export const EN_TRANSLATION = {
   Dark: 'Dark Theme',
   Light: 'Light Theme',
   Language: 'Language 🌍',
-  Hebrew: 'Hebrew - עברית',
-  Russian: 'Russian - Русский',
+  
   English: 'English',
-  Arabic: 'Arabic - العربية',
-  Spanish: 'Spanish - Español',
+  
   Hindi: 'Hindi - हिंदी',
-  'Mandarin Chinese': 'Mandarin Chinese - 中文普通话',
-  French: 'French - Française',
+  
+  
   Red: 'Red',
   Blue: 'Blue',
   Green: 'Green',

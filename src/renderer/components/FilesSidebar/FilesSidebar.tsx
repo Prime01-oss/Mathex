@@ -45,8 +45,13 @@ const FilesSidebar = () => {
           <SidebarButton
             title={t('Shortcuts')}
             buttonType='menu'
-            icon='Settings'
-            onClick={handleOnClickMathPanel}
+            icon='question'
+            
+          />
+          <SidebarButton
+            title={t('Chalk-Board')}
+            buttonType='page'
+            icon='pen'
           />
         </section>
         <section id='bottom'>
