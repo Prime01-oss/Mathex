@@ -1,0 +1,131 @@
+.files-sidebar {
+  transition: 0.2s;
+  display: flex;
+  flex-direction: row;
+  width: 45px;
+  min-width: 45px;
+  max-width: 45px;
+  gap: 10px;
+
+  .basic {
+    transition: 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    direction: var(--app-direction);
+    justify-content: space-between;
+    align-items: flex-start;
+
+    section {
+      display: flex;
+      flex-direction: column;
+      direction: var(--app-direction);
+      align-items: flex-start;
+      gap: 8px;
+      transition: 0.2s;
+
+      .sidebar-button {
+        transition: 0.2s;
+        background-color: transparent;
+        width: 45px;
+        height: 45px;
+        border-radius: 15px;
+        cursor: default;
+
+        &.open {
+          background-color: var(--page-border);
+
+          .fi {
+            color: var(--tool-color);
+          }
+        }
+
+        &:hover::after {
+          content: attr(data-tooltip);
+          color: hsla(var(--app-text-color), 1);
+          min-width: 95px;
+          position: fixed;
+          margin-inline-start: 170px;
+          z-index: 1000;
+          padding: 6px 10px 6px 10px;
+          background-color: var(--button-bgcolor);
+          text-shadow: none;
+          border: 1px solid var(--page-border);
+          border-radius: 6px;
+          opacity: 0%;
+          animation: tooltip 0.1s ease-in-out 0.3s forwards;
+        }
+
+        &:active::after {
+          display: none;
+        }
+
+        &:hover {
+          .fi {
+            color: var(--tool-color);
+          }
+        }
+
+        &:active {
+          transform: scale(0.9);
+        }
+
+        .fi {
+          transition: 0.2s color;
+          margin: auto;
+          font-size: 22px;
+          color: var(--sidebar-button-color);
+          text-shadow: none;
+          padding-top: 3px;
+        }
+      }
+    }
+
+    section#bottom {
+      padding-bottom: 10px;
+    }
+  }
+
+  .extension {
+    width: 45px;
+    height: 100%;
+  }
+
+  &.open {
+    width: 100%;
+    animation: openSidebar 0s linear 0.3s;
+    min-width: 230px;
+    animation-fill-mode: forwards;
+    max-width: 15vw;
+
+    .extension {
+      min-width: 210px;
+      max-width: 15vw;
+      width: 100%;
+    }
+  }
+}
+
+@keyframes openSidebar {
+  from {
+    min-width: 230px;
+  }
+
+  to {
+    min-width: max-content;
+  }
+}
+
+@keyframes tooltip {
+  from {
+    transform: scale(0.95);
+    opacity: 0%;
+    box-shadow: 0px 1px 3px #00000000;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 100%;
+    box-shadow: 0px 1px 3px #0000002a;
+  }
+}

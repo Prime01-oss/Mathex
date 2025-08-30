@@ -1,0 +1,143 @@
+
+@import '../../../assets/icons/uicons.css';
+@import './Theme.scss';
+@import './Fonts.css';
+
+::selection {
+  background: var(--selection-bgcolor);
+  color: var(--selection-color);
+}
+
+::-webkit-scrollbar {
+  width: var(--scroll-width);
+
+  &-track {
+    background: transparent;
+  }
+
+  &-thumb {
+    background: var(--scroll-thumb-bgcolor);
+    border-radius: 50px;
+  }
+
+  &-thumb:hover {
+    background: var(--scroll-thumb-hover-bgcolor);
+  }
+}
+
+html,
+body,
+#app {
+  transition: 0.3s;
+  height: 100%;
+  overflow: hidden;
+  direction: var(--app-direction);
+}
+
+body {
+  margin: 0;
+  margin-right: 0 !important;
+  font-size: var(--app-font-size);
+  font-family: var(--app-font-family);
+  color: var(--app-color);
+  background: var(--app-bgcolor);
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+
+  &.has-border {
+    border: var(--app-border-color);
+  }
+}
+
+button {
+  background: var(--button-bgcolor);
+  color: var(--button-color);
+  font-weight: normal;
+  text-shadow: 0px 1px var(--button-shadow-color);
+  font-family: var(--app-font-family);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: 0.1s;
+  display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
+  outline: none;
+
+  &.tool {
+    background-color: #1a2428;
+  }
+
+  &:hover {
+    background: var(--button-hover-bgcolor);
+  }
+  &:active {
+    background: var(--button-active-bgcolor);
+  }
+}
+
+.rotate {
+  animation: rotate 4.5s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center;
+}
+
+#main-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 5px;
+  overflow-x: hidden;
+
+  .workspace {
+    width: calc(100% - 20px);
+    align-self: center;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    direction: var(--app-direction);
+    justify-content: center;
+    gap: 10px;
+
+    .math-sidebar.open {
+      width: 100%;
+      min-width: 230px;
+      max-width: 15vw;
+    }
+
+    .math-sidebar {
+      transition: 0.2s;
+      width: 45px;
+      min-width: 45px;
+      max-width: 45px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+}
