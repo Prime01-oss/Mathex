@@ -17,7 +17,11 @@ const onboardingContent = {
         "content": [
           {
             "type": "heading-one",
-            "children": [{ "text": "Welcome to mathex! 👋" }]
+            "children": [
+              { "text": "Welcome to " },
+              { "text": "mathex", "highlight": true },
+              { "text": "! 👋" }
+            ]
           }
         ]
       }
@@ -40,18 +44,17 @@ const onboardingContent = {
           {
             "type": "paragraph",
             "children": [
-              {
-                "text": "mathex is a mathematical tool notebook designed for math students who need a platform for graphing, sketching, writing etc. Providing a reliable and efficient tool that works anywhere and anytime."
-              }
+              { "text": "mathex", "highlight": true },
+              { "text": " is a mathematical tool notebook designed for math students who need a platform for graphing, sketching, writing etc. Providing a reliable and efficient tool that works anywhere and anytime." }
             ]
           },
           { "type": "paragraph", "children": [{ "text": "Important note:" }] },
           {
             "type": "paragraph",
             "children": [
-              {
-                "text": "🚧 mathex is still in development! 🚧"
-              }
+              { "text": "🚧 " },
+              { "text": "mathex", "highlight": true },
+              { "text": " is still under development! 🚧" }
             ]
           }
         ]

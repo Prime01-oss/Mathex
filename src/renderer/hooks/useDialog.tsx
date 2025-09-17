@@ -2,7 +2,8 @@ import { BlockElement } from '@renderer/common/types';
 import { useEffect } from 'react';
 import { useGeneralContext } from '@components/GeneralContext';
 
-export function useDialog(
+// This function is for the "Clear Page" confirmation dialog
+export function useConfirmDialog(
   setStateFunction: (...args: unknown[]) => unknown,
   setAllBlockValues: (...args: unknown[]) => unknown,
   setClearModalOpen: (args: boolean) => void,
@@ -27,3 +28,14 @@ export function useDialog(
 
   return { handleDialogCancel, handleDialogConfirm };
 }
+
+// --- START: NEW, CORRECTED HOOK FOR DIALOG ACTIONS ---
+// We create a new, simpler hook for actions that don't need confirmation.
+export function useDialogActions() {
+  const handleOpenFolder = () => {
+    window.api.send('open-folder');
+  };
+
+  return { handleOpenFolder };
+}
+// --- END: NEW, CORRECTED HOOK ---

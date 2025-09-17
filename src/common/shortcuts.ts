@@ -122,7 +122,7 @@ const ML_SHORTCUTS: Record<string, InlineShortcutDefinition> = {
       value: '\\degree'
     },
   
-    'infty': '\\infty',
+    'infinity': '\\infty',
   
     '\u221E': '\\infty', // @TODO: doesn't work
     // '&infin;': '\\infty',

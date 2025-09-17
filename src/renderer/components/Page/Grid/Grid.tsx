@@ -15,7 +15,9 @@ import 'react-resizable/css/styles.css';
 import GridElement from './GridElement';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useAddBlock } from '@renderer/hooks/useAddBlock';
-import { useDialog } from '@renderer/hooks/useDialog';
+// --- START: CORRECTED LINES ---
+import { useConfirmDialog } from '@renderer/hooks/useDialog';
+// --- END: CORRECTED LINES ---
 import { useFileSaveLoad } from '@renderer/hooks/useFileSaveLoad';
 import { useTranslation } from 'react-i18next';
 
@@ -53,7 +55,9 @@ const PageGrid = () => {
 
   useAddBlock(setState);
 
-  const ModalChoice = useDialog(setState, setAllBlockValues, setClearModalOpen);
+  // --- START: CORRECTED LINES ---
+  const ModalChoice = useConfirmDialog(setState, setAllBlockValues, setClearModalOpen);
+  // --- END: CORRECTED LINES ---
 
   const onLayoutChange = (layout: Array<BlockElement>) => {
     layout.map((block) => {

@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron';
-import { createAppWindow } from './appWindow';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { createAppWindow } from './appWindow'; // Corrected this line
 
 /** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
 if (require('electron-squirrel-startup')) {
@@ -41,6 +41,16 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// --- START: CORRECTED NEW FILE REQUEST LISTENER ---
+ipcMain.on('new-file-request', () => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window) {
+    // This sends a 'new-file' message to the renderer process
+    window.webContents.send('new-file');
+  }
+});
+// --- END: CORRECTED NEW FILE REQUEST LISTENER ---
 
 /**
  * In this file you can include the rest of your app's specific main process code.

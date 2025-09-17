@@ -10,14 +10,18 @@ type SidebarButtonProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const SidebarButton = ({
-  buttonType,
-  state,
-  title,
-  icon,
-  onClick,
-}: SidebarButtonProps) => {
-  const iconName = `fi fi-rr-${icon}`
+const ICON_MAP: Record<string, string> = {
+  notebook: 'fi fi-rr-notebook',
+  terminal: 'fi fi-rr-terminal',
+  question: 'fi fi-rr-question',
+  pen: 'fi fi-rr-pencil',
+  calculator: 'fi fi-rr-calculator',
+  archive: 'fi fi-rr-archive',
+  page: 'fi fi-rr-document',
+};
+
+const SidebarButton: React.FC<SidebarButtonProps> = ({ buttonType, state, title, icon, onClick }) => {
+  const iconClass = icon && ICON_MAP[icon] ? ICON_MAP[icon] : ICON_MAP['question'];
   return (
     <div>
       <button
@@ -26,7 +30,7 @@ const SidebarButton = ({
         id={buttonType}
         onClick={onClick}
       >
-        <i className={iconName}></i>
+        <i className={iconClass}></i>
       </button>
     </div>
   );

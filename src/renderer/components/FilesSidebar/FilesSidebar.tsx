@@ -3,27 +3,20 @@ import './FilesSidebar.scss';
 import SidebarButton from './SidebarButton';
 import FileSystem from './FileSystem';
 import { useKBar } from 'kbar';
-import { useGeneralContext } from '@components/GeneralContext';
+import { useGeneralContext } from '../GeneralContext';
 import { useTranslation } from 'react-i18next';
 
-const FilesSidebar = () => {
-  const { t, i18n } = useTranslation();
-
+const FilesSidebar: React.FC = () => {
+  const { t } = useTranslation();
   const { query } = useKBar();
   const {
-    setIsMathSidebarOpen,
-    setIsFilesSidebarOpen,
     isMathSidebarOpen,
     isFilesSidebarOpen,
+    setIsMathSidebarOpen,
+    setIsFilesSidebarOpen,
+    setIsChalkBoardOpen,
+    setIsShortcutsModalOpen,
   } = useGeneralContext();
-
-  const handleOnClickFiles = () => {
-    setIsFilesSidebarOpen((isFilesSidebarOpen: boolean) => !isFilesSidebarOpen);
-  };
-
-  const handleOnClickMathPanel = () => {
-    setIsMathSidebarOpen((isMathSidebarOpen: boolean) => !isMathSidebarOpen);
-  };
 
   return (
     <div className={`files-sidebar${isFilesSidebarOpen ? ' open' : ''}`}>
@@ -32,9 +25,9 @@ const FilesSidebar = () => {
           <SidebarButton
             title={t('My Notebooks')}
             buttonType='files'
-            state={isFilesSidebarOpen}
+            state={isFilesSidebarOpen} // CORRECTED THIS LINE
             icon='notebook'
-            onClick={handleOnClickFiles}
+            onClick={() => setIsFilesSidebarOpen((prev: boolean) => !prev)}
           />
           <SidebarButton
             title={t('Command Bar')}
@@ -46,21 +39,23 @@ const FilesSidebar = () => {
             title={t('Shortcuts')}
             buttonType='menu'
             icon='question'
-            
+            onClick={() => setIsShortcutsModalOpen(true)}
           />
           <SidebarButton
             title={t('Chalk-Board')}
             buttonType='page'
             icon='pen'
+            onClick={() => setIsChalkBoardOpen(true)}
           />
         </section>
+
         <section id='bottom'>
           <SidebarButton
             title={t('Math Panel')}
             buttonType='mathPanel'
             state={isMathSidebarOpen}
             icon='calculator'
-            onClick={handleOnClickMathPanel}
+            onClick={() => setIsMathSidebarOpen((prev: boolean) => !prev)}
           />
           <SidebarButton
             title={t('Archive')}
@@ -69,6 +64,7 @@ const FilesSidebar = () => {
           />
         </section>
       </div>
+
       {isFilesSidebarOpen && (
         <section className='extension'>
           <FileSystem />

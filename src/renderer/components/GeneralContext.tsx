@@ -12,11 +12,12 @@ import { Action, KBarProvider } from 'kbar';
 const GeneralContext = createContext(null);
 
 function GeneralContextProvider({ children }: PropsWithChildren) {
-  // Needs to reordered properly
+  // --- All State variables ---
   const getDefaultLang = () => {
-    return localStorage.getItem('language') ? localStorage.getItem('language') : 'en';
-  }
-
+    return localStorage.getItem('language')
+      ? localStorage.getItem('language')
+      : 'en';
+  };
   const [saveRequest, setSaveRequest] = useState({ cmd: '' });
   const [clearPageRequest, setClearPageRequest] = useState({ cmd: '' });
   const [newWidgetRequest, setNewWidgetRequest] = useState<newWidgetRequest>();
@@ -24,12 +25,15 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
   const [currentFileTags, setCurrentFileTags] = useState<string[]>([]);
   const [isFilesSidebarOpen, setIsFilesSidebarOpen] = useState(false);
   const [isMathSidebarOpen, setIsMathSidebarOpen] = useState(false);
+  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
+  const [isChalkBoardOpen, setIsChalkBoardOpen] = useState(false);
   const [isRtl, setIsRtl] = useState(true);
   const [language, setLanguage] = useState(getDefaultLang());
   const [darkTheme, setDarkTheme] = useState(true);
   const [colorTheme, setColorTheme] = useState('');
   const [currentOS, setCurrentOS] = useState('');
 
+  // --- All Functions ---
   const setColor = (name: string, hue: number) => {
     localStorage.setItem('color', name);
     document.documentElement.style.setProperty('--theme-hue', hue.toString());
@@ -58,13 +62,13 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
       case 0:
         document.body.classList.remove('dark-mode');
         break;
-
       case 1:
         document.body.classList.add('dark-mode');
         break;
     }
   };
 
+  // --- START: RESTORED ACTIONS VARIABLE ---
   const actions: Action[] = [
     {
       id: 'preferences',
@@ -85,91 +89,70 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
       name: i18n.t('Color'),
       parent: 'preferences',
     },
-    
     {
       id: 'english',
       name: i18n.t('English'),
-      perform: () => {
-        setLang('en');
-      },
+      perform: () => { setLang('en'); },
       parent: 'language',
     },
-    
     {
       id: 'hindi',
       name: i18n.t('Hindi'),
-      perform: () => {
-        setLang('hi');
-      },
+      perform: () => { setLang('hi'); },
       parent: 'language',
     },
-    
     {
       id: 'blue',
       name: i18n.t('Blue'),
-      perform: () => {
-        setColor('blue', 210);
-      },
+      perform: () => { setColor('blue', 210); },
       parent: 'color',
     },
     {
       id: 'pink',
       name: i18n.t('Pink'),
-      perform: () => {
-        setColor('pink', 300);
-      },
+      perform: () => { setColor('pink', 300); },
       parent: 'color',
     },
     {
       id: 'yellow',
       name: i18n.t('Yellow'),
-      perform: () => {
-        setColor('yellow', 35);
-      },
+      perform: () => { setColor('yellow', 35); },
       parent: 'color',
     },
     {
       id: 'purple',
       name: i18n.t('Purple'),
-      perform: () => {
-        setColor('purple', 250);
-      },
+      perform: () => { setColor('purple', 250); },
       parent: 'color',
     },
     {
       id: 'red',
       name: i18n.t('Red'),
-      perform: () => {
-        setColor('red', 0);
-      },
+      perform: () => { setColor('red', 0); },
       parent: 'color',
     },
     {
       id: 'green',
       name: i18n.t('Green'),
-      perform: () => {
-        setColor('green', 140);
-      },
+      perform: () => { setColor('green', 140); },
       parent: 'color',
     },
     {
       id: 'light',
       name: i18n.t('Light'),
-      perform: () => {
-        setTheme(0);
-      },
+      perform: () => { setTheme(0); },
       parent: 'theme',
     },
     {
       id: 'dark',
       name: i18n.t('Dark'),
-      perform: () => {
-        setTheme(1);
-      },
+      perform: () => { setTheme(1); },
       parent: 'theme',
     },
   ];
+  // --- END: RESTORED ACTIONS VARIABLE ---
 
+  // --- All useEffect hooks ---
   useEffect(() => {
     const useDarkTheme = parseInt(localStorage.getItem('dark-mode'));
     if (isNaN(useDarkTheme)) {
@@ -205,33 +188,18 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     switch (colorTheme) {
-      case 'red':
-        setColor('red', 0);
-        break;
-      case 'yellow':
-        setColor('yellow', 35);
-        break;
-      case 'green':
-        setColor('green', 140);
-        break;
-      case 'blue':
-        setColor('blue', 210);
-        break;
-      case 'purple':
-        setColor('purple', 250);
-        break;
-      case 'pink':
-        setColor('pink', 300);
-        break;
-
-      default:
-        break;
+      case 'red': setColor('red', 0); break;
+      case 'yellow': setColor('yellow', 35); break;
+      case 'green': setColor('green', 140); break;
+      case 'blue': setColor('blue', 210); break;
+      case 'purple': setColor('purple', 250); break;
+      case 'pink': setColor('pink', 300); break;
+      default: break;
     }
   }, [colorTheme]);
 
   useEffect(() => {
     window.api.getOS();
-
     window.api.receive('gotOS', (data: string) => {
       setCurrentOS(data);
     });
@@ -239,6 +207,7 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
 
   return (
     <GeneralContext.Provider
+      // --- START: RESTORED ALL VALUES TO CONTEXT ---
       value={{
         newWidgetRequest,
         setNewWidgetRequest,
@@ -264,7 +233,12 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
         setColor,
         actions,
         currentOS,
+        isShortcutsModalOpen,
+        setIsShortcutsModalOpen,
+        isChalkBoardOpen,
+        setIsChalkBoardOpen,
       }}
+      // --- END: RESTORED ALL VALUES TO CONTEXT ---
     >
       <KBarProvider
         actions={actions}
