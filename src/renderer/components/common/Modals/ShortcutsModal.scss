@@ -1,141 +1,187 @@
-/* --- Professional Full-Screen Shortcuts Modal --- */
-
-.shortcuts-pro-view.modal-overlay {
-  /* The overlay is now just a container, no background needed */
-  background-color: transparent;
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  
-  /* --- CRUCIAL CHANGE: Ensure it's positioned to fill the screen --- */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.shortcuts-modal {
-  /* --- CRUCIAL CHANGE: Make the modal itself fill the entire screen --- */
-  width: 100%;
-  height: 100%;
-  
-  /* Remove styles for a floating modal */
-  border-radius: 0;
-  box-shadow: none;
-
-  /* Use the correct greyish background from your app's theme */
-  background-color: var(--app-bgcolor); 
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  .modal-header {
-    padding: 18px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--app-border-color);
-    flex-shrink: 0;
-
-    h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--erwt-heading-color);
-    }
-
-    .close-button {
-      background: none;
-      border: none;
-      font-size: 2rem;
-      cursor: pointer;
-      color: var(--sidebar-button-color);
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: var(--tool-color);
-      }
-    }
-  }
-
-  .modal-body {
-    display: flex;
-    flex-grow: 1;
+.shortcuts-pro-view {
+  &.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    background-color: hsla(0, 0%, 0%, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .shortcuts-modal {
+    background: var(--page-bgcolor);
+    color: hsl(var(--app-text-color));
+    border: 1px solid var(--page-border);
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 800px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-  }
 
-  .shortcuts-sidebar {
-    width: 200px;
-    padding: 20px 10px;
-    border-right: 1px solid var(--app-border-color);
-    flex-shrink: 0;
-    background-color: var(--page-bgcolor);
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-
-      li button {
-        width: 100%;
-        padding: 10px 15px;
-        text-align: left;
-        background: none;
-        border: none;
-        border-radius: 6px;
-        font-size: 0.95rem;
-        color: var(--tool-color);
-        cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease;
-
-        &:hover {
-          background-color: var(--background-color-light);
-          color: var(--erwt-heading-color);
-        }
-
-        &.active {
-          background-color: var(--app-accent-color);
-          color: white;
-          font-weight: 600;
-        }
-      }
-    }
-  }
-
-  .shortcuts-content {
-    flex-grow: 1;
-    padding: 25px 30px;
-    overflow-y: auto;
-
-    .shortcut-item {
+    .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 10px;
+      padding: 15px 25px;
       border-bottom: 1px solid var(--app-border-color);
-      
-      &:last-child {
-        border-bottom: none;
+      flex-shrink: 0;
+      gap: 20px;
+
+      h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        white-space: nowrap;
       }
 
-      .shortcut-description {
-        color: var(--titlebar-popup-item-name-color);
-        font-size: 0.9rem;
+      .shortcuts-search-bar {
+        display: flex;
+        align-items: center;
+        background-color: var(--math-block-bgcolor);
+        border-radius: 8px;
+        padding: 0 12px;
+        flex-grow: 1;
+        border: 1px solid var(--app-border-color);
+        transition: background-color 0.2s, border-color 0.2s;
+        
+        &:focus-within {
+          background-color: var(--page-bgcolor);
+          border-color: var(--app-accent-color);
+        }
+
+        i {
+          color: var(--tool-color);
+          font-size: 16px;
+          margin-right: 10px;
+        }
+
+        input {
+          width: 100%;
+          border: none;
+          outline: none;
+          background-color: transparent;
+          padding: 10px 0;
+          font-size: 14px;
+          color: hsl(var(--app-text-color));
+          &::placeholder { color: var(--tool-color); opacity: 0.7; }
+        }
       }
+
+      .close-button {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--tool-color);
+        padding: 0;
+        line-height: 1;
+      }
+    }
+
+    .modal-body {
+      flex-grow: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shortcuts-content {
+      flex-grow: 1;
+      padding: 20px 25px;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .shortcut-toggle-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+        padding: 5px;
+        background-color: var(--button-bgcolor);
+        border-radius: 8px;
+        border: 1px solid var(--app-border-color);
+        flex-shrink: 0;
+
+        button {
+          flex-grow: 1;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 6px;
+          background-color: transparent;
+          color: var(--tool-color);
+          cursor: pointer;
+          font-weight: 500;
+          transition: background-color 0.2s, color 0.2s;
+          
+          &:hover {
+            background-color: var(--pill-hover-bgcolor);
+            color: hsl(var(--app-text-color));
+          }
+
+          &.active {
+            background-color: var(--pill-active-bgcolor);
+            color: hsl(var(--app-text-color));
+          }
+        }
+      }
+      
+      .shortcuts-list {
+        overflow-y: auto;
+        flex-grow: 1;
+        opacity: 1;
+        transition: opacity 200ms ease-in-out;
+
+        &.loading {
+          opacity: 0.5;
+        }
+      }
+
+      .shortcut-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5px;
+        border-bottom: 1px solid var(--app-border-color);
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      .shortcut-description { color: hsl(var(--app-text-color)); }
 
       .shortcut-keys-math {
         display: flex;
         align-items: center;
         gap: 15px;
-        
-        .math-symbol {
-          font-size: 1.2rem;
-          color: var(--titlebar-popup-item-name-color);
-        }
+      }
+      
+      .kbc-button {
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: var(--button-border);
+        background-color: var(--pill-bgcolor);
+        font-family: monospace;
+        font-size: 12px;
+        color: hsl(var(--app-text-color));
+      }
+      
+      .math-symbol { min-width: 20px; text-align: center; }
+
+      .no-results-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+        color: var(--tool-color);
+        font-style: italic;
+        text-align: center;
       }
     }
   }

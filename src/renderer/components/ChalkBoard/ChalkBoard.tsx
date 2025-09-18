@@ -1,7 +1,7 @@
 import React from 'react';
-import './ChalkBoard.scss';
+import './chalkBoard.scss';
 import { useGeneralContext } from '../GeneralContext';
-import DrawBlockContent from '../Page/Grid/Blocks/DrawBlock';
+import { Tldraw } from '@tldraw/tldraw';
 
 const ChalkBoard: React.FC = () => {
   const { isChalkBoardOpen, setIsChalkBoardOpen } = useGeneralContext();
@@ -17,7 +17,11 @@ const ChalkBoard: React.FC = () => {
         ✕
       </button>
       <div className='draw-container'>
-        <DrawBlockContent content={null} blockStateFunction={() => {}} />
+        {/* This is the drawing canvas. By setting showUI to true, 
+          we are telling it to display its own professional, 
+          built-in UI with all the tools you need.
+        */}
+        <Tldraw showUI={true} />
       </div>
     </div>
   );

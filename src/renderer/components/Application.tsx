@@ -1,6 +1,4 @@
 import React from 'react';
-import '../../../node_modules/react-grid-layout/css/styles.css';
-import '../../../node_modules/react-resizable/css/styles.css';
 import './Application.scss';
 import { CommandBar } from './CommandBar/CommandBar';
 import FilesSidebar from './FilesSidebar/FilesSidebar';
@@ -11,33 +9,30 @@ import Page from './Page/Page';
 import ChalkBoard from './ChalkBoard/ChalkBoard';
 import ShortcutsModal from './common/Modals/ShortcutsModal';
 
-// This new inner component can access the context
 const AppContent = () => {
-  // --- START: UPDATE THIS LINE ---
-  const { isShortcutsModalOpen, isChalkBoardOpen } = useGeneralContext();
-  // --- END: UPDATE THIS LINE ---
+  // Get the state for both the chalkboard and the shortcuts modal
+  const { isChalkBoardOpen, isShortcutsModalOpen } = useGeneralContext();
 
   return (
     <div id='main-app'>
-      <Header />
+      {/* --- THIS IS THE KEY CHANGE --- */}
+      {/* Only show the Header if the ChalkBoard is NOT open */}
+      {!isChalkBoardOpen && <Header />}
+
       <div className='workspace'>
         <FilesSidebar />
         <CommandBar />
         <Page />
         <MathSidebar />
       </div>
-      
-      {/* --- START: ADD THIS LINE TO RENDER THE CHALKBOARD --- */}
-      {isChalkBoardOpen && <ChalkBoard />}
-      {/* --- END: ADD THIS LINE --- */}
 
-      {/* Conditionally render the modal here */}
+      {/* Conditionally render the overlays */}
+      {isChalkBoardOpen && <ChalkBoard />}
       {isShortcutsModalOpen && <ShortcutsModal />}
     </div>
   );
 };
 
-// The main Application component now just provides the context
 const Application = () => {
   return (
     <GeneralContextProvider>

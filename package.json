@@ -1,6 +1,6 @@
 {
   "name": "mathex",
-  "productName": "mathEx",
+  "productName": "mathex",
   "version": "1.0.0",
   "description": "Digital Mathematics Notebook",
   "main": ".webpack/main",
@@ -21,28 +21,9 @@
     "notes"
   ],
   "author": {
-    "name": "yonatanmgr",
-    "url": "https://github.com/yonatanmgr"
+    "name": "Samarjit Patar",
+    "email": "patarsamar123abc@gmail.com"
   },
-  "contributors": [
-    {
-      "name": "Erez Birenholz",
-      "url": "https://github.com/ErezBiren"
-    },
-    {
-      "name": "Ziv Nadel",
-      "url": "https://github.com/zivnadel"
-    },
-    {
-      "name": "Nadav Magier",
-      "url": "https://github.com/Nadav0077"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yonatanmgr/mathex"
-  },
-  "license": "MIT",
   "config": {
     "forge": "./tools/forge/forge.config.js"
   },
@@ -67,6 +48,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "electron": "^23.0.0",
+    "electron-forge-maker-nsis": "^26.0.12",
     "eslint": "^8.33.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.27.5",
@@ -87,7 +69,7 @@
   "dependencies": {
     "@cortex-js/compute-engine": "^0.12.2",
     "@flaticon/flaticon-uicons": "^2.0.1",
-    "@tldraw/tldraw": "^1.28.0",
+    "@tldraw/tldraw": "^1.29.2",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "fuse.js": "^7.1.0",
