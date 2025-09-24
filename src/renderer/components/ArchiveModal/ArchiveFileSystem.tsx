@@ -22,16 +22,15 @@ function ArchiveFileSystem() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [focusedItem, setFocusedItem] = useState<TreeItemIndex>(-1);
 
-
   useEffect(() => {
-    // A new API call to get archived notebooks
-    window.api.getArchivedNotebooks();
-  }, [items]);
+    const fetchArchivedNotebooks = async () => {
+      const data = await window.api.getArchivedNotebooks();
+      if (data && data.root) {
+        setItems(data.root);
+      }
+    };
 
-  useEffect(() => {
-    window.api.receive('gotArchivedNotebooks', (data: { root: TreeItemsObj }) => {
-      setItems(data.root);
-    });
+    fetchArchivedNotebooks();
   }, []);
 
   return (

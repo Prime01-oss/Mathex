@@ -26,6 +26,7 @@ import {
 } from './FileSystemHelpers';
 import { MathTreeItem, TreeItemsObj } from './types';
 import { useTranslation } from 'react-i18next';
+import ContextMenu from './ContextMenu'; // <-- ADDED
 
 type receivedProps = { filesPath: string; root: SetStateAction<TreeItemsObj> };
 declare global {
@@ -52,6 +53,7 @@ function FileSystem() {
   const [selectedDirectory, setSelectedDirectory] =
     useState<TreeItemIndex>('root');
   const [focusedItem, setFocusedItem] = useState<TreeItemIndex>(-1);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; item: TreeItemIndex } | null>(null); // <-- ADDED
 
   useEffect(() => {
     window.api.getNotebooks();
@@ -195,6 +197,68 @@ function FileSystem() {
     }
   };
 
+  // --- START: ADDED FUNCTIONS FOR CONTEXT MENU ---
+  const handleArchiveItem = async () => {
+    if (!contextMenu) return;
+    const itemToArchive = items[contextMenu.item];
+    if (!itemToArchive) return;
+
+    const result = await window.api.archiveItem(itemToArchive.path);
+    if (result.success) {
+      setItems(prev => {
+        const newItems = { ...prev };
+        const itemToDelete = contextMenu.item;
+
+        // Also remove it from its parent's children array
+        const parent = getParent(newItems, itemToDelete);
+        if (parent) {
+          newItems[parent.index] = {
+            ...parent,
+            children: parent.children.filter(child => child !== itemToDelete),
+          };
+        }
+
+        // Recursively delete the item and all its children if it's a folder
+        const itemsToDelete = [itemToDelete];
+        const queue = [...(newItems[itemToDelete]?.children ?? [])];
+        while (queue.length > 0) {
+          const currentItem = queue.shift();
+          if (currentItem) {
+            itemsToDelete.push(currentItem);
+            const children = newItems[currentItem]?.children;
+            if (children) {
+              queue.push(...children);
+            }
+          }
+        }
+        
+        for (const item of itemsToDelete) {
+            delete newItems[item];
+        }
+
+        return newItems;
+      });
+    }
+    setContextMenu(null);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLElement;
+    const itemElement = target.closest('[data-rct-item-id]');
+    if (itemElement) {
+        const itemId = itemElement.getAttribute('data-rct-item-id');
+        if (itemId && itemId !== 'root') { // Don't allow archiving the root
+            setContextMenu({
+                x: e.clientX,
+                y: e.clientY,
+                item: itemId,
+            });
+        }
+    }
+  };
+  // --- END: ADDED FUNCTIONS FOR CONTEXT MENU ---
+
   return (
     <div className='file-system' onKeyUp={handleDeleteItem}>
       <div className='file-system-header'>
@@ -214,8 +278,8 @@ function FileSystem() {
           </button>
         </div>
       </div>
-      <div className='files-tree-container' onClick={handleClickedOutsideItem}>
-        {/* <button onClick={() => console.table(items)}>X</button> */}
+      {/* ADDED onContextMenu HANDLER HERE vvv */}
+      <div className='files-tree-container' onClick={handleClickedOutsideItem} onContextMenu={handleContextMenu}>
         <ControlledTreeEnvironment
           items={items}
           canDragAndDrop={true}
@@ -272,6 +336,16 @@ function FileSystem() {
       >
         {errorModalContent}
       </ErrorModal>
+
+      {/* ADDED CONTEXT MENU RENDER vvv */}
+      {contextMenu && (
+        <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            onArchive={handleArchiveItem}
+            onClose={() => setContextMenu(null)}
+        />
+      )}
     </div>
   );
 }

@@ -45,6 +45,12 @@ contextBridge.exposeInMainWorld('api', {
   getNotebooks: () => {
     ipcRenderer.send('getNotebooks');
   },
+  getArchivedNotebooks: () => {
+    return ipcRenderer.invoke('get-archived-notebooks');
+  },
+  archiveItem: (path: string) => {
+    return ipcRenderer.invoke('archive-item', path);
+  },
   delete: (path: string, isFolder: boolean) => {
     ipcRenderer.send('delete', path, isFolder);
   },
