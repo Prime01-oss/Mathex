@@ -4,31 +4,32 @@ import { CommandBar } from './CommandBar/CommandBar';
 import FilesSidebar from './FilesSidebar/FilesSidebar';
 import { GeneralContextProvider, useGeneralContext } from './GeneralContext';
 import Header from './Header/Header';
-import MathSidebar from './MathSidebar/MathSidebar';
 import Page from './Page/Page';
 import ChalkBoard from './ChalkBoard/ChalkBoard';
 import ShortcutsModal from './common/Modals/ShortcutsModal';
+// --- 1. IMPORT THE NEW POPUP CALCULATOR ---
+import PopupCalculator from './PopupCalculator/PopupCalculator';
 
 const AppContent = () => {
-  // Get the state for both the chalkboard and the shortcuts modal
-  const { isChalkBoardOpen, isShortcutsModalOpen } = useGeneralContext();
+  // --- 2. GET THE NEW STATE FROM THE CONTEXT ---
+  const { isChalkBoardOpen, isShortcutsModalOpen, isCalculatorOpen } = useGeneralContext();
 
   return (
     <div id='main-app'>
-      {/* --- THIS IS THE KEY CHANGE --- */}
-      {/* Only show the Header if the ChalkBoard is NOT open */}
       {!isChalkBoardOpen && <Header />}
 
       <div className='workspace'>
         <FilesSidebar />
         <CommandBar />
         <Page />
-        <MathSidebar />
+        {/* The old MathSidebar component is now completely removed from the layout */}
       </div>
 
-      {/* Conditionally render the overlays */}
+      {/* Conditionally render all overlays */}
       {isChalkBoardOpen && <ChalkBoard />}
       {isShortcutsModalOpen && <ShortcutsModal />}
+      {/* --- 3. RENDER THE CALCULATOR WHEN ITS STATE IS TRUE --- */}
+      {isCalculatorOpen && <PopupCalculator />}
     </div>
   );
 };

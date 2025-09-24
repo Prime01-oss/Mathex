@@ -10,12 +10,12 @@ const FilesSidebar: React.FC = () => {
   const { t } = useTranslation();
   const { query } = useKBar();
   const {
-    isMathSidebarOpen,
     isFilesSidebarOpen,
-    setIsMathSidebarOpen,
     setIsFilesSidebarOpen,
     setIsChalkBoardOpen,
     setIsShortcutsModalOpen,
+    // --- 1. GET THE FUNCTION TO CONTROL THE CALCULATOR ---
+    setIsCalculatorOpen,
   } = useGeneralContext();
 
   return (
@@ -25,7 +25,7 @@ const FilesSidebar: React.FC = () => {
           <SidebarButton
             title={t('My Notebooks')}
             buttonType='files'
-            state={isFilesSidebarOpen} // CORRECTED THIS LINE
+            state={isFilesSidebarOpen}
             icon='notebook'
             onClick={() => setIsFilesSidebarOpen((prev: boolean) => !prev)}
           />
@@ -51,11 +51,11 @@ const FilesSidebar: React.FC = () => {
 
         <section id='bottom'>
           <SidebarButton
-            title={t('Math Panel')}
+            title={t('Calculator')}
             buttonType='mathPanel'
-            state={isMathSidebarOpen}
             icon='calculator'
-            onClick={() => setIsMathSidebarOpen((prev: boolean) => !prev)}
+            // --- 2. CONNECT THE BUTTON'S ONCLICK TO TOGGLE THE CALCULATOR ---
+            onClick={() => setIsCalculatorOpen((prev: boolean) => !prev)}
           />
           <SidebarButton
             title={t('Archive')}

@@ -9,14 +9,30 @@ import { newWidgetRequest } from '@renderer/common/types';
 import i18n from '@common/i18n';
 import { Action, KBarProvider } from 'kbar';
 
+// --- DEFINE ACTIONS OUTSIDE THE COMPONENT ---
+const staticActions: Action[] = [
+  { id: 'preferences', name: 'Preferences' },
+  { id: 'language', name: 'Language', parent: 'preferences' },
+  { id: 'theme', name: 'Theme', parent: 'preferences' },
+  { id: 'color', name: 'Color', parent: 'preferences' },
+  { id: 'english', name: 'English', parent: 'language' },
+  { id: 'hindi', name: 'Hindi', parent: 'language' },
+  { id: 'blue', name: 'Blue', parent: 'color' },
+  { id: 'pink', name: 'Pink', parent: 'color' },
+  { id: 'yellow', name: 'Yellow', parent: 'color' },
+  { id: 'purple', name: 'Purple', parent: 'color' },
+  { id: 'red', name: 'Red', parent: 'color' },
+  { id: 'green', name: 'Green', parent: 'color' },
+  { id: 'light', name: 'Light', parent: 'theme' },
+  { id: 'dark', name: 'Dark', parent: 'theme' },
+];
+
 const GeneralContext = createContext(null);
 
 function GeneralContextProvider({ children }: PropsWithChildren) {
   // --- All State variables ---
   const getDefaultLang = () => {
-    return localStorage.getItem('language')
-      ? localStorage.getItem('language')
-      : 'en';
+    return localStorage.getItem('language') || 'en';
   };
   const [saveRequest, setSaveRequest] = useState({ cmd: '' });
   const [clearPageRequest, setClearPageRequest] = useState({ cmd: '' });
@@ -27,22 +43,31 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
   const [isMathSidebarOpen, setIsMathSidebarOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isChalkBoardOpen, setIsChalkBoardOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isRtl, setIsRtl] = useState(true);
   const [language, setLanguage] = useState(getDefaultLang());
-  const [darkTheme, setDarkTheme] = useState(true);
-  const [colorTheme, setColorTheme] = useState('');
   const [currentOS, setCurrentOS] = useState('');
 
+  // ✅ 1. INITIALIZE STATE FROM LOCALSTORAGE
+  const [darkTheme, setDarkTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('dark-mode');
+    return savedTheme ? savedTheme === '1' : true; // Default to dark
+  });
+  const [colorTheme, setColorTheme] = useState(() => {
+    return localStorage.getItem('color') || 'blue'; // Default to blue
+  });
+
   // --- All Functions ---
+  // ✅ 2. UPDATE SETTER FUNCTIONS TO SYNC STATE
   const setColor = (name: string, hue: number) => {
     localStorage.setItem('color', name);
     document.documentElement.style.setProperty('--theme-hue', hue.toString());
+    setColorTheme(name); // Sync React state
   };
 
   const setLang = (language: string) => {
     i18n.changeLanguage(language);
     setLanguage(language);
-
     localStorage.setItem('language', language);
     if (isRtlLang(language)) {
       document.querySelector('#main-app').classList.add('rtl');
@@ -58,145 +83,54 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
 
   const setTheme = (theme: number) => {
     localStorage.setItem('dark-mode', theme.toString());
-    switch (theme) {
-      case 0:
-        document.body.classList.remove('dark-mode');
-        break;
-      case 1:
-        document.body.classList.add('dark-mode');
-        break;
+    const isDark = theme === 1;
+    setDarkTheme(isDark); // Sync React state
+    if (isDark) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
     }
   };
 
-  // --- START: RESTORED ACTIONS VARIABLE ---
-  const actions: Action[] = [
-    {
-      id: 'preferences',
-      name: i18n.t('Preferences'),
-    },
-    {
-      id: 'language',
-      name: i18n.t('Language'),
-      parent: 'preferences',
-    },
-    {
-      id: 'theme',
-      name: i18n.t('Theme'),
-      parent: 'preferences',
-    },
-    {
-      id: 'color',
-      name: i18n.t('Color'),
-      parent: 'preferences',
-    },
-    {
-      id: 'english',
-      name: i18n.t('English'),
-      perform: () => { setLang('en'); },
-      parent: 'language',
-    },
-    {
-      id: 'hindi',
-      name: i18n.t('Hindi'),
-      perform: () => { setLang('hi'); },
-      parent: 'language',
-    },
-    {
-      id: 'blue',
-      name: i18n.t('Blue'),
-      perform: () => { setColor('blue', 210); },
-      parent: 'color',
-    },
-    {
-      id: 'pink',
-      name: i18n.t('Pink'),
-      perform: () => { setColor('pink', 300); },
-      parent: 'color',
-    },
-    {
-      id: 'yellow',
-      name: i18n.t('Yellow'),
-      perform: () => { setColor('yellow', 35); },
-      parent: 'color',
-    },
-    {
-      id: 'purple',
-      name: i18n.t('Purple'),
-      perform: () => { setColor('purple', 250); },
-      parent: 'color',
-    },
-    {
-      id: 'red',
-      name: i18n.t('Red'),
-      perform: () => { setColor('red', 0); },
-      parent: 'color',
-    },
-    {
-      id: 'green',
-      name: i18n.t('Green'),
-      perform: () => { setColor('green', 140); },
-      parent: 'color',
-    },
-    {
-      id: 'light',
-      name: i18n.t('Light'),
-      perform: () => { setTheme(0); },
-      parent: 'theme',
-    },
-    {
-      id: 'dark',
-      name: i18n.t('Dark'),
-      perform: () => { setTheme(1); },
-      parent: 'theme',
-    },
-  ];
-  // --- END: RESTORED ACTIONS VARIABLE ---
+  // --- Create dynamic actions ---
+  const dynamicActions = staticActions.map(action => {
+    const translatedAction = { ...action, name: i18n.t(action.name) };
+    switch (action.id) {
+      case 'english': return { ...translatedAction, perform: () => setLang('en') };
+      case 'hindi': return { ...translatedAction, perform: () => setLang('hi') };
+      case 'blue': return { ...translatedAction, perform: () => setColor('blue', 210) };
+      case 'pink': return { ...translatedAction, perform: () => setColor('pink', 300) };
+      case 'yellow': return { ...translatedAction, perform: () => setColor('yellow', 35) };
+      case 'purple': return { ...translatedAction, perform: () => setColor('purple', 250) };
+      case 'red': return { ...translatedAction, perform: () => setColor('red', 0) };
+      case 'green': return { ...translatedAction, perform: () => setColor('green', 140) };
+      case 'light': return { ...translatedAction, perform: () => setTheme(0) };
+      case 'dark': return { ...translatedAction, perform: () => setTheme(1) };
+      default: return translatedAction;
+    }
+  });
 
   // --- All useEffect hooks ---
+  // ✅ 3. ADD USEEFFECT TO APPLY THEMES ON INITIAL LOAD
   useEffect(() => {
-    const useDarkTheme = parseInt(localStorage.getItem('dark-mode'));
-    if (isNaN(useDarkTheme)) {
-      setDarkTheme(true);
-    } else if (useDarkTheme == 1) {
-      setDarkTheme(true);
-    } else if (useDarkTheme == 0) {
-      setDarkTheme(false);
-    }
-
-    if (!localStorage.getItem('all-tags'))
-      localStorage.setItem('all-tags', JSON.stringify([]));
-
-    if (!localStorage.getItem('color')) localStorage.setItem('color', 'blue');
-    setColorTheme(localStorage.getItem('color'));
-
-    if (!localStorage.getItem('language'))
-      localStorage.setItem('language', 'en');
-    setLanguage(localStorage.getItem('language'));
-  }, []);
-
-  useEffect(() => {
+    // Apply dark mode from state on first load
     if (darkTheme) {
-      setTheme(1);
+      document.body.classList.add('dark-mode');
     } else {
-      setTheme(0);
+      document.body.classList.remove('dark-mode');
     }
-  }, [darkTheme]);
+    
+    // Helper map to get hue from color name
+    const colorMap: { [key: string]: number } = {
+      blue: 210, pink: 300, yellow: 35, purple: 250, red: 0, green: 140,
+    };
 
-  useEffect(() => {
-    setLang(language);
-  }, [language]);
-
-  useEffect(() => {
-    switch (colorTheme) {
-      case 'red': setColor('red', 0); break;
-      case 'yellow': setColor('yellow', 35); break;
-      case 'green': setColor('green', 140); break;
-      case 'blue': setColor('blue', 210); break;
-      case 'purple': setColor('purple', 250); break;
-      case 'pink': setColor('pink', 300); break;
-      default: break;
+    // Apply color theme from state on first load
+    const hue = colorMap[colorTheme];
+    if (hue !== undefined) {
+      document.documentElement.style.setProperty('--theme-hue', hue.toString());
     }
-  }, [colorTheme]);
+  }, []); // Empty array ensures this runs only once on mount
 
   useEffect(() => {
     window.api.getOS();
@@ -207,41 +141,27 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
 
   return (
     <GeneralContext.Provider
-      // --- START: RESTORED ALL VALUES TO CONTEXT ---
       value={{
-        newWidgetRequest,
-        setNewWidgetRequest,
-        clearPageRequest,
-        setClearPageRequest,
-        selectedFile,
-        setSelectedFile,
-        saveRequest,
-        setSaveRequest,
-        currentFileTags,
-        setCurrentFileTags,
-        isMathSidebarOpen,
-        setIsMathSidebarOpen,
-        isFilesSidebarOpen,
-        setIsFilesSidebarOpen,
-        isRtl,
-        setIsRtl,
-        language,
-        setLang,
-        darkTheme,
-        setTheme,
-        colorTheme,
-        setColor,
-        actions,
+        newWidgetRequest, setNewWidgetRequest,
+        clearPageRequest, setClearPageRequest,
+        selectedFile, setSelectedFile,
+        saveRequest, setSaveRequest,
+        currentFileTags, setCurrentFileTags,
+        isMathSidebarOpen, setIsMathSidebarOpen,
+        isFilesSidebarOpen, setIsFilesSidebarOpen,
+        isRtl, setIsRtl,
+        language, setLang,
+        darkTheme, setTheme,
+        colorTheme, setColor,
+        actions: dynamicActions,
         currentOS,
-        isShortcutsModalOpen,
-        setIsShortcutsModalOpen,
-        isChalkBoardOpen,
-        setIsChalkBoardOpen,
+        isShortcutsModalOpen, setIsShortcutsModalOpen,
+        isChalkBoardOpen, setIsChalkBoardOpen,
+        isCalculatorOpen, setIsCalculatorOpen,
       }}
-      // --- END: RESTORED ALL VALUES TO CONTEXT ---
     >
       <KBarProvider
-        actions={actions}
+        actions={dynamicActions}
         options={{ toggleShortcut: '$mod+Shift+p' }}
       >
         {children}
@@ -253,7 +173,7 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
 function useGeneralContext() {
   const context = useContext(GeneralContext);
   if (context === undefined) {
-    throw new Error('useMyContext must be used within a MyContextProvider');
+    throw new Error('useGeneralContext must be used within a GeneralContextProvider');
   }
   return context;
 }

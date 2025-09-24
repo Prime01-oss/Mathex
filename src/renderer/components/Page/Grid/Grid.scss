@@ -6,7 +6,6 @@
     right: unset !important;
 }
 
-
 .layout {
     height: 100% !important;
     direction: ltr;
@@ -14,15 +13,19 @@
     max-height: 100%;
     min-width: 100%;
 
-    .react-grid-placeholder{
-        transition: 0.2s;
-        background-color: var(--tool-bgcolor);
-        opacity: 20%;
-        border-radius: 5px;
+    // --- START: THIS IS THE DEFINITIVE FIX ---
+    // This selector is more specific and uses !important to override any defaults.
+    .react-grid-placeholder {
+        background: var(--app-accent-color) !important; // Use your theme's accent color
+        opacity: 0.15 !important; // Make it a subtle wash of color
+        border-radius: 5px !important;
+        border: none !important; // Remove any unwanted borders
+        transition: all 0.2s ease-in-out !important;
     }
+    // --- END: THE FIX ---
     
     .block {
-        transition: 0.2s;
+        transition: transform 0.2s ease-in-out;
         display: flex;
         flex-direction: row;  
         width: 100%;
@@ -43,6 +46,11 @@
 
         .block-content {
             transition: inherit;
+            outline: 1px solid transparent;
+
+            &:has(.MafsView){
+                outline: 1px solid var(--tool-hover-bgcolor);
+            }
         }
 
         .block-handle {
@@ -75,12 +83,11 @@
             }
         }
 
-        .block-content{
-            outline: 1px solid transparent;
-            transition: 0.2s;
-            &:has(.MafsView){
-                outline: 1px solid var(--tool-hover-bgcolor);
-            }
+        // This rule prevents the browser's default red outline on the block itself.
+        &.resizing .block-content,
+        &:focus .block-content,
+        &:focus-within .block-content {
+            outline: 1px solid var(--tool-hover-bgcolor) !important;
         }
 
         &:hover {
@@ -90,7 +97,6 @@
                     display: flex;
                 }
             }
-
 
             .block-handle {
                 opacity: 70%;

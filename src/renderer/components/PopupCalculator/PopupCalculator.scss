@@ -1,0 +1,114 @@
+@import '../Theme.scss';
+
+.popup-calculator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--page-bgcolor);
+  color: hsl(var(--app-text-color));
+  border: 1px solid var(--page-border);
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  width: 340px; // A bit wider for the new layout
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  border-bottom: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+  cursor: grab;
+  &:active { cursor: grabbing; }
+
+  span {
+    font-weight: 600;
+    opacity: 0.8;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--tool-color);
+    padding: 0;
+    line-height: 1;
+    &:hover { color: hsl(var(--app-text-color)); }
+  }
+}
+
+.popup-body {
+  padding: 10px;
+}
+
+.calculator-display {
+  background-color: var(--math-block-bgcolor);
+  border: 1px solid var(--app-border-color);
+  color: hsl(var(--app-text-color));
+  font-size: 2.2rem;
+  padding: 10px 15px;
+  text-align: right;
+  font-family: monospace;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.calculator-buttons.scientific {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); // 5 columns for the scientific layout
+  gap: 5px;
+
+  .calc-button {
+    padding: 12px 0;
+    border: 1px solid var(--app-border-color);
+    border-radius: 6px;
+    background-color: var(--button-bgcolor);
+    color: var(--tool-color);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    
+    &:hover {
+      background-color: var(--pill-hover-bgcolor);
+      color: hsl(var(--app-text-color));
+    }
+    &:active {
+      background-color: var(--pill-active-bgcolor);
+    }
+
+    // Special Styling for button types
+    &.num {
+      background-color: transparent;
+      font-weight: 600;
+    }
+
+    &.func, &.const {
+      background-color: hsla(var(--app-text-color), 0.05);
+    }
+    
+    &.op, &.eq {
+      background-color: hsla(var(--app-accent-color), 0.8);
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    &.clear {
+      color: #ff5c5c;
+    }
+
+    // Make the '0' button span two columns
+    &.wide {
+      grid-column: span 2;
+    }
+  }
+}

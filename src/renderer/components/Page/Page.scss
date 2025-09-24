@@ -1,95 +1,92 @@
 @import '../Theme.scss';
 @import '~keyboard-css/dist/css/main.min.css';
 
-::-webkit-scrollbar {
-    width: 0;
+// --- MAIN PAGE CONTAINER ---
+// This acts as the background and provides minimal side padding.
+.page {
+  width: calc(100% - 50px);
+  height: 100%;
+  background: var(--page-bgcolor);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px 12px 0 0;
 }
 
-.page {
-    transition: 0.3s;
-    width: 100%;
-    height: 100%;
-    max-width: calc(100% - 110px);
-    background: var(--page-bgcolor);
-    border-width: 2px 2px 0px 2px;
-    border-style: solid;
-    box-sizing: border-box;
-    border-color: var(--page-border);
-    border-radius: 15px 15px 0px 0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+// --- THE NOTEBOOK "SHEET" ---
+// This is the main visual element that expands to fill the space.
+.page-grid {
+  width: 100%;
+  height: 100%;
+  background: var(--grid-bgcolor);
+//   border: 1px solid var(--app-border-color);
+  border-bottom: none; // No border at the bottom for a "floating sheet" effect
+  border-radius: 12px 12px 0 0; // Rounded corners only at the top
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.05); // Subtle shadow for depth
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Center the content container within the sheet
+  overflow-y: auto; // This makes the entire sheet scrollable
 
-    .page-grid {
-        min-width: 60%;
-        width: 70%;
-        max-width: 80%;
-        height: 100%;
+  // Custom scrollbar for a professional look
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: hsla(var(--app-text-color), 0.2);
+    border-radius: 4px;
+    &:hover {
+      background: hsla(var(--app-text-color), 0.3);
+    }
+  }
+}
 
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-        align-items: center;
+// --- CONTENT CONTAINER ---
+// This holds your blocks and is constrained for readability.
+.grid-container {
+  width: 100%;
+  max-width: 900px; // Keeps text lines from being too long
+  padding-top: 100px;
+  margin-bottom: 80px;
+}
 
-        .grid-container {
-            padding-top: 100px;
-            margin-bottom: 80px;
-            height: 100%;
-            max-height: 100%;
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-self: center;
-            justify-content: space-between;
-        }
+// --- PLACEHOLDER STYLING (REFINED) ---
+.page-placeholder {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  .placeholder-text {
+    line-height: 1.6;
+    color: hsla(var(--app-text-color), 0.5);
+    font-weight: 300;
+    font-size: 18px;
+    text-align: center;
+
+    .fi {
+      font-size: 16px;
+      margin-bottom: 4px;
+      display: inline-block;
     }
 
-    .page-placeholder {
-        align-self: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
+    // Refined button style to reduce reliance on !important
+    .kbc-button {
+      background: var(--button-bgcolor);
+      border: 1px solid var(--app-border-color);
+      box-shadow: 0 2px 0 var(--app-border-color);
+      color: hsla(var(--app-text-color), 0.7);
+      font-family: inherit;
+      font-weight: 400;
+      margin: 0 4px;
 
-        .placeholder-text {
-            line-height: 1.5;
-            opacity: 70%;
-            font-weight: 100;
-            text-align: center;
-            padding-bottom: 80px;
-            font-size: 20px;
-            color: hsla(var(--app-text-color), 1);
-
-            .fi{
-                height: 18px;
-                display: inline-block;
-                margin-bottom: 6px;
-                font-size: 18px;
-            }
-            .kbc-button {
-                font-family: 'Rubik2', 'NotoSansArabic' !important;
-                font-weight: 100;
-                color: hsla(var(--app-text-color), 1) !important;
-                box-shadow:
-                    0 0 var(--page-border),
-                    0 0 var(--page-border),
-                    0 1px var(--page-border),
-                    0 2px var(--page-border),
-                    0 3px var(--page-border),
-                    0 4px var(--page-border),
-                    0 5px var(--page-border),
-                    2px 2.5px 4px var(--page-border) !important;
-                background-color: var(--page-bgcolor) !important;
-                border: 1px solid var(--page-border) !important;
-                border-bottom: 1px solid var(--page-border) !important;
-
-                &::after {
-                    border: 1px solid var(--page-border) !important;
-                }
-            }
-        }
+      &::after {
+        border: none !important;
+      }
     }
+  }
 }
