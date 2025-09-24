@@ -14,8 +14,8 @@ const FilesSidebar: React.FC = () => {
     setIsFilesSidebarOpen,
     setIsChalkBoardOpen,
     setIsShortcutsModalOpen,
-    // --- 1. GET THE FUNCTION TO CONTROL THE CALCULATOR ---
     setIsCalculatorOpen,
+    setIsArchiveModalOpen,
   } = useGeneralContext();
 
   return (
@@ -54,13 +54,13 @@ const FilesSidebar: React.FC = () => {
             title={t('Calculator')}
             buttonType='mathPanel'
             icon='calculator'
-            // --- 2. CONNECT THE BUTTON'S ONCLICK TO TOGGLE THE CALCULATOR ---
             onClick={() => setIsCalculatorOpen((prev: boolean) => !prev)}
           />
           <SidebarButton
             title={t('Archive')}
             buttonType='archive'
             icon='archive'
+            onClick={() => setIsArchiveModalOpen((prev: boolean) => !prev)}
           />
         </section>
       </div>

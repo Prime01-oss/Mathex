@@ -1,0 +1,26 @@
+.archive-file-system {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: hsl(var(--app-text-color));
+}
+
+.archive-file-system-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+
+  .archive-file-system-header-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+.archive-files-tree-container {
+  flex-grow: 1;
+  padding: 10px 15px;
+  overflow-y: auto;
+}

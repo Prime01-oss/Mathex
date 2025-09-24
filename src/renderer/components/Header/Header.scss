@@ -24,7 +24,7 @@
       align-items: center;
       direction: var(--app-direction);
       height: 100%;
-      max-width: calc(100% - 200px);
+      max-width: calc(100% - 160px);
       white-space: nowrap;
       width: max-content;
       -webkit-app-region: no-drag;
@@ -142,8 +142,8 @@
       #logo {
         fill: hsla(var(--app-text-color), 1);
         display: block;
-        width: 45px;
-        height: 55%;
+        width: 35px;
+        height: 45%;
         filter: var(--logo-filter);
       }
 
@@ -189,6 +189,66 @@
           }
         }
       }
+    }
+  }
+}
+// src/renderer/components/Header/Header.scss
+
+// ... (existing styles)
+
+.header-content {
+  // ... (existing styles for header-content)
+  justify-content: space-between;
+  width: 100%;
+
+  .header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 33%;
+  }
+
+  .header-right {
+    justify-content: flex-end;
+  }
+
+  .header-center {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+  }
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--math-block-bgcolor);
+  border-radius: 5px;
+  padding: 5px 10px;
+  width:400px; // You can adjust this width as needed
+  border: 1px solid var(--app-border-color);
+
+  i {
+    color: var(--erwt-heading-color);
+    margin-right: 10px;
+    opacity: 0.7;
+  }
+
+  input {
+    background-color: transparent;
+    border: none;
+    color: var(--erwt-heading-color);
+    width: 100%;
+    font-size: 16px;
+    font-family: var(--app-font-family);
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: var(--erwt-heading-color);
+      opacity: 0.5;
     }
   }
 }

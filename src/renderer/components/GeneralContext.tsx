@@ -44,9 +44,11 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isChalkBoardOpen, setIsChalkBoardOpen] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false); // ADD THIS LINE
   const [isRtl, setIsRtl] = useState(true);
   const [language, setLanguage] = useState(getDefaultLang());
   const [currentOS, setCurrentOS] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // <-- ADDED: Search query state
 
   // ✅ 1. INITIALIZE STATE FROM LOCALSTORAGE
   const [darkTheme, setDarkTheme] = useState(() => {
@@ -119,7 +121,7 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
     } else {
       document.body.classList.remove('dark-mode');
     }
-    
+
     // Helper map to get hue from color name
     const colorMap: { [key: string]: number } = {
       blue: 210, pink: 300, yellow: 35, purple: 250, red: 0, green: 140,
@@ -158,6 +160,8 @@ function GeneralContextProvider({ children }: PropsWithChildren) {
         isShortcutsModalOpen, setIsShortcutsModalOpen,
         isChalkBoardOpen, setIsChalkBoardOpen,
         isCalculatorOpen, setIsCalculatorOpen,
+        isArchiveModalOpen, setIsArchiveModalOpen, // ADD THIS LINE
+        searchQuery, setSearchQuery, // <-- ADDED: Provide search state to context
       }}
     >
       <KBarProvider
