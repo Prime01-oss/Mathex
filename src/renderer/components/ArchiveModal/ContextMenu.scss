@@ -1,0 +1,37 @@
+// File: src/renderer/components/ArchiveModal/ContextMenu.scss
+
+.archive-context-menu {
+  position: fixed;
+  z-index: 1001;
+  background-color: var(--page-bgcolor);
+  border: 1px solid var(--page-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 180px;
+}
+
+.context-menu-button {
+  background-color: transparent;
+  border: none;
+  color: hsla(var(--app-text-color), 1);
+  padding: 8px 12px;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  font-family: 'Rubik2', 'NotoSansArabic';
+
+  &:hover {
+    background-color: var(--file-hover-bgcolor);
+  }
+
+  &.delete:hover {
+    background-color: hsl(0, 70%, 90%);
+    color: hsl(0, 80%, 50%);
+  }
+}
