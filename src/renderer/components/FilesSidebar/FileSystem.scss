@@ -272,3 +272,40 @@
     box-shadow: 0px 1px 3px #0000002a;
   }
 }
+// ... (keep all your existing styles for .file-system, etc.)
+
+.file-system-header {
+  // This will push the title and buttons to opposite ends
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .file-system-header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px; // Adds space between the archive button and the new group
+
+    .button-group {
+      display: flex;
+      // Creates the visual grouping for add file/folder buttons
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      overflow: hidden;
+
+      button {
+        border: none;
+        border-radius: 0;
+        // Adds a separator line between the two buttons
+        &:first-child {
+          border-right: 1px solid var(--color-border);
+        }
+      }
+    }
+    
+    // Styles the new standalone archive button
+    > button {
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+    }
+  }
+}
