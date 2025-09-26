@@ -176,12 +176,14 @@ function FileSystem() {
       >
         {errorModalContent}
       </ErrorModal>
-      {contextMenu && (
+     {contextMenu && (
         <ContextMenu
-            x={contextMenu.x}
-            y={contextMenu.y}
-            onArchive={handleArchiveItem}
-            onClose={() => setContextMenu(null)}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onAddFile={addFile}          // Add this
+          onAddFolder={addFolder}      // Add this
+          onArchive={handleArchiveItem}
+          onClose={() => setContextMenu(null)}
         />
       )}
     </div>
