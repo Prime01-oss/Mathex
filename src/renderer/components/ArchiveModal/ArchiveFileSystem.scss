@@ -129,3 +129,70 @@
     }
   }
 }
+// Add these new styles to the end of ArchiveFileSystem.scss
+
+.header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.archive-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.header-button {
+  background-color: var(--selected-bgcolor);
+  color: hsla(var(--app-text-color), 1);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Rubik2', 'NotoSansArabic';
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: var(--selected-hover-bgcolor);
+  }
+
+  &:disabled {
+    background-color: var(--file-hover-bgcolor);
+    color: hsla(var(--app-text-color), 0.4);
+    cursor: not-allowed;
+  }
+
+  &.restore {
+    background-color: hsl(145, 63%, 42%);
+    color: white;
+    &:hover {
+        background-color: hsl(145, 63%, 38%);
+    }
+    &:disabled {
+        background-color: hsla(145, 63%, 42%, 0.5);
+        color: hsla(0, 0%, 100%, 0.7);
+    }
+  }
+
+  &.secondary {
+    background-color: var(--file-hover-bgcolor);
+    &:hover {
+        background-color: var(--app-border-color);
+    }
+  }
+}
+
+.item-checkbox {
+  margin-right: 12px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.rct-tree-item-title {
+    display: flex;
+    align-items: center;
+}
