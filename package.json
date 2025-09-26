@@ -1,8 +1,8 @@
 {
   "name": "mathex",
   "productName": "mathex",
-  "version": "1.0.0",
-  "description": "Digital Mathematics Notebook",
+  "version": "1.0.1",
+  "description": "Digital Mathematical Notebook",
   "main": ".webpack/main",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron-forge start",
