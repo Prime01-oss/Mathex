@@ -1,6 +1,6 @@
 // File: src/renderer/components/ArchiveModal/ContextMenu.tsx
 
-import React from 'react'; // Corrected this line
+import React from 'react';
 import './ContextMenu.scss';
 
 interface ContextMenuProps {
@@ -9,6 +9,7 @@ interface ContextMenuProps {
   onClose: () => void;
   onRestore: () => void;
   onDelete: () => void;
+  selectionCount: number;
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -17,6 +18,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   onClose,
   onRestore,
   onDelete,
+  selectionCount,
 }) => {
   const handleRestore = () => {
     onRestore();
@@ -28,6 +30,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     onClose();
   };
 
+  const restoreText = selectionCount > 1 ? `Restore ${selectionCount} Items` : 'Restore';
+  const deleteText = selectionCount > 1 ? `Delete ${selectionCount} Items` : 'Delete Permanently';
+
   return (
     <div
       className="archive-context-menu"
@@ -35,10 +40,10 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       onClick={(e) => e.stopPropagation()} // Prevent clicks inside from closing it immediately
     >
       <button onClick={handleRestore} className="context-menu-button">
-        Restore
+        {restoreText}
       </button>
       <button onClick={handleDelete} className="context-menu-button delete">
-        Delete Permanently
+        {deleteText}
       </button>
     </div>
   );

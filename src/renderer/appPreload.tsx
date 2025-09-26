@@ -32,9 +32,14 @@ window.addEventListener('DOMContentLoaded', () => {
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('api', {
-    getArchivedNotebooks: () => ipcRenderer.invoke('get-archived-notebooks'),
-    archiveItem: (itemPath: string) => ipcRenderer.invoke('archive-item', itemPath),
-    restoreArchivedNotebook: (itemPath: string) => ipcRenderer.invoke('restore-archived-notebook', itemPath),
-    deleteArchivedNotebook: (itemPath: string) => ipcRenderer.invoke('delete-archived-notebook', itemPath),
-    // Add other functions you want to expose here
+    // --- SINGLE-ITEM HANDLERS (EXISTING CODE) ---
+    getArchivedNotebooks: () => ipcRenderer.invoke('get-archived-notebooks'),
+    archiveItem: (itemPath: string) => ipcRenderer.invoke('archive-item', itemPath),
+    restoreArchivedNotebook: (itemPath: string) => ipcRenderer.invoke('restore-archived-notebook', itemPath),
+    deleteArchivedNotebook: (itemPath: string) => ipcRenderer.invoke('delete-archived-notebook', itemPath),
+    
+    // --- BATCH-OPERATION HANDLERS (NEW CODE) ---
+    archiveItems: (itemPaths: string[]) => ipcRenderer.invoke('archive-items', itemPaths),
+    restoreArchivedNotebooks: (itemPaths: string[]) => ipcRenderer.invoke('restore-archived-notebooks', itemPaths),
+    deleteArchivedNotebooks: (itemPaths: string[]) => ipcRenderer.invoke('delete-archived-notebooks', itemPaths),
 });

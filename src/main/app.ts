@@ -61,7 +61,7 @@ ipcMain.handle('get-archived-notebooks', async () => {
       index: 'root',
       data: 'Archived',
       path: archivePath,
-      children: [] as string[], // <-- FIX APPLIED HERE
+      children: [] as string[],
       isFolder: true,
     },
   };
@@ -80,7 +80,7 @@ ipcMain.handle('get-archived-notebooks', async () => {
         data: fileName,
         path: filePath,
         isFolder: isFolder,
-        children: [] as string[], // <-- FIX APPLIED HERE
+        children: [] as string[],
       };
 
       items[filePath] = item;
@@ -92,6 +92,8 @@ ipcMain.handle('get-archived-notebooks', async () => {
 
   return { root: items };
 });
+
+// --- SINGLE-ITEM HANDLERS (EXISTING CODE) ---
 
 ipcMain.handle('archive-item', async (event, itemPath) => {
   const userDataPath = app.getPath('userData');
@@ -111,30 +113,78 @@ ipcMain.handle('archive-item', async (event, itemPath) => {
 });
 
 ipcMain.handle('restore-archived-notebook', async (event, itemPath) => {
-    const userDataPath = app.getPath('userData');
-    // Assuming 'notebooks' is your main directory for active files.
-    // Please change 'notebooks' if your directory is named differently.
-    const notebooksPath = path.join(userDataPath, 'notebooks');
-    await fs.ensureDir(notebooksPath);
+    const userDataPath = app.getPath('userData');
+    const notebooksPath = path.join(userDataPath, 'notebooks');
+    await fs.ensureDir(notebooksPath);
 
-    const itemName = path.basename(itemPath);
-    const newPath = path.join(notebooksPath, itemName);
+    const itemName = path.basename(itemPath);
+    const newPath = path.join(notebooksPath, itemName);
 
-    try {
-        await fs.move(itemPath, newPath, { overwrite: true });
-        return { success: true, path: newPath };
-    } catch (error) {
-        console.error('Failed to restore item:', error);
-        return { success: false, error: error.message };
-    }
+    try {
+        await fs.move(itemPath, newPath, { overwrite: true });
+        return { success: true, path: newPath };
+    } catch (error) {
+        console.error('Failed to restore item:', error);
+        return { success: false, error: error.message };
+    }
 });
 
 ipcMain.handle('delete-archived-notebook', async (event, itemPath) => {
-    try {
-        await fs.remove(itemPath);
-        return { success: true };
-    } catch (error) {
-        console.error('Failed to delete item:', error);
-        return { success: false, error: error.message };
-    }
+    try {
+        await fs.remove(itemPath);
+        return { success: true };
+    } catch (error) {
+        console.error('Failed to delete item:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+// --- BATCH-OPERATION HANDLERS (NEW CODE) ---
+
+ipcMain.handle('archive-items', async (event, itemPaths: string[]) => {
+    const userDataPath = app.getPath('userData');
+    const archivePath = path.join(userDataPath, 'archive');
+    await fs.ensureDir(archivePath);
+
+    const results = await Promise.allSettled(
+        itemPaths.map(async (itemPath) => {
+            const itemName = path.basename(itemPath);
+            const newPath = path.join(archivePath, itemName);
+            await fs.move(itemPath, newPath, { overwrite: true });
+            return newPath;
+        })
+    );
+
+    const successful = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+    return { success: failed === 0, successful, failed };
+});
+
+ipcMain.handle('restore-archived-notebooks', async (event, itemPaths: string[]) => {
+    const userDataPath = app.getPath('userData');
+    const notebooksPath = path.join(userDataPath, 'notebooks');
+    await fs.ensureDir(notebooksPath);
+
+    const results = await Promise.allSettled(
+        itemPaths.map(async (itemPath) => {
+            const itemName = path.basename(itemPath);
+            const newPath = path.join(notebooksPath, itemName);
+            await fs.move(itemPath, newPath, { overwrite: true });
+            return newPath;
+        })
+    );
+
+    const successful = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+    return { success: failed === 0, successful, failed };
+});
+
+ipcMain.handle('delete-archived-notebooks', async (event, itemPaths: string[]) => {
+    const results = await Promise.allSettled(
+        itemPaths.map(itemPath => fs.remove(itemPath))
+    );
+
+    const successful = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+    return { success: failed === 0, successful, failed };
 });

@@ -63,23 +63,44 @@ function ArchiveFileSystem() {
     e.preventDefault();
     e.stopPropagation();
     if (item.index === 'root') return;
+    // If the right-clicked item is not already in the selection,
+    // clear the previous selection and select only the clicked item.
+    if (!selectedItems.includes(item.index)) {
+        setSelectedItems([item.index]);
+    }
     setContextMenu({ x: e.clientX, y: e.clientY, item });
   };
 
-  const handleRestore = async (item: MathTreeItem) => {
-    if (item.path) {
-      await window.api.restoreArchivedNotebook(item.path);
+  const handleRestore = async () => {
+    if (selectedItems.length === 0) return;
+    
+    const pathsToRestore = selectedItems
+      .map(id => originalItems[id]?.path)
+      .filter(Boolean);
+
+    if (pathsToRestore.length > 0) {
+      const result = await window.api.restoreArchivedNotebooks(pathsToRestore);
+      // You can add a user-facing notification here about the result
+      console.log(`Restored ${result.successful} notebooks, ${result.failed} failed.`);
       fetchArchivedNotebooks();
     }
   };
 
-  const handleDelete = async (item: MathTreeItem) => {
-    if (item.path) {
-      const confirmed = confirm(`Are you sure you want to permanently delete "${item.data}"?`);
-      if (confirmed) {
-        await window.api.deleteArchivedNotebook(item.path);
-        fetchArchivedNotebooks();
-      }
+  const handleDelete = async () => {
+    if (selectedItems.length === 0) return;
+
+    const pathsToDelete = selectedItems
+      .map(id => originalItems[id]?.path)
+      .filter(Boolean);
+    
+    if (pathsToDelete.length > 0) {
+        const itemText = pathsToDelete.length > 1 ? `${pathsToDelete.length} notebooks` : `"${originalItems[selectedItems[0]].data}"`;
+        const confirmed = confirm(`Are you sure you want to permanently delete ${itemText}?`);
+        if (confirmed) {
+            const result = await window.api.deleteArchivedNotebooks(pathsToDelete);
+            console.log(`Deleted ${result.successful} notebooks, ${result.failed} failed.`);
+            fetchArchivedNotebooks();
+        }
     }
   };
 
@@ -87,12 +108,10 @@ function ArchiveFileSystem() {
     if (contextMenu) setContextMenu(null);
   };
 
-  // This function decides what to render in the main content area
   const renderContent = () => {
     if (isLoading) {
       return <div className="archive-feedback-message">Loading...</div>;
     }
-
     if (error) {
       return (
         <div className="archive-feedback-message error">
@@ -101,15 +120,12 @@ function ArchiveFileSystem() {
         </div>
       );
     }
-
     if (!originalItems.root?.children?.length) {
         return <div className="archive-feedback-message">No archived notebooks.</div>;
     }
-    
     if (searchQuery && !filteredItems.root?.children?.length) {
         return <div className="archive-feedback-message">No results found for "{searchQuery}".</div>;
     }
-
     return (
       <ControlledTreeEnvironment
         items={filteredItems}
@@ -151,8 +167,9 @@ function ArchiveFileSystem() {
           x={contextMenu.x}
           y={contextMenu.y}
           onClose={() => setContextMenu(null)}
-          onRestore={() => handleRestore(contextMenu.item)}
-          onDelete={() => handleDelete(contextMenu.item)}
+          onRestore={handleRestore}
+          onDelete={handleDelete}
+          selectionCount={selectedItems.length}
         />
       )}
     </div>
